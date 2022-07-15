@@ -1,5 +1,6 @@
 FROM ubuntu:latest
 ARG cdr_version
+ARG vscode_pwd
 RUN apt-get update && apt-get install -y curl sudo
 RUN useradd -ms /bin/bash coder && adduser coder sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -10,6 +11,11 @@ RUN curl -fOL https://github.com/coder/code-server/releases/download/v${cdr_vers
 RUN sudo apt-get install -y npm && sudo npm install -g n
 RUN sudo n stable
 
-ENV PASSWORD=tobechanged
+RUN sudo apt-get install -y apt-transport-https ca-certificates curl
+RUN sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+RUN sudo apt-get update && sudo apt-get install -y kubectl
+
+ENV PASSWORD=${vscode_pwd}
 EXPOSE 8080
 CMD ["code-server", "--bind-addr", "0.0.0.0:8080"]
