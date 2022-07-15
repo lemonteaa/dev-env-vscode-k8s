@@ -1,0 +1,16 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    dev.okteto.com/generate-host: "true"
+  name: #@ "port-" + str(data.values.port)
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: test-serv
+          servicePort: #@ data.values.port
+        path: /

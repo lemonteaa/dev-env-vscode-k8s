@@ -1,0 +1,9 @@
+#@ load("@ytt:data", "data")
+---
+- op: add
+  path: "/spec/ports/-"
+  value:
+    name: #@ "port-" + str(data.values.port)
+    port: #@ data.values.port
+    protocol: TCP
+    targetPort: #@ data.values.port
