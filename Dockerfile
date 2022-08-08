@@ -18,6 +18,10 @@ RUN sudo apt-get update && sudo apt-get install -y kubectl
 
 RUN curl -fOL https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.41.1/ytt-linux-amd64 && chmod a+x ytt-linux-amd64 && sudo mv ytt-linux-amd64 /usr/bin/ytt
 
+RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+RUN sudo apt-get update && sudo apt-get install -y helm
+
 COPY open-port/ /opt/open-port/
 
 ENV PASSWORD=${vscode_pwd}
